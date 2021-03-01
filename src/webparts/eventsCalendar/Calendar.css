@@ -1,0 +1,201 @@
+.container {
+  max-width: 690px;
+}
+
+.calendar-main {
+
+  box-shadow: 0px 0px 2px 0px;
+
+  background-color: white;
+}
+
+.datepicker table tr td.new,
+.datepicker table tr td.old {
+  color: #BAC2C7;
+  background-color: #FAFCFE;
+}
+
+.dow {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+  color: #7F8FA4;
+  text-align: center;
+  line-height: 10px;
+}
+
+.datepicker-switch {
+  font-family: Arial, Helvetica, sans-serif bold;
+  font-size: 25px;
+
+  color: #2C3135;
+  text-align: center;
+}
+
+.row1 {
+  height: 50px;
+  box-shadow: 0px 0px 2px 0px;
+  background-color: white;
+  padding: 5px 5px 5px 5px;
+  box-shadow: black;
+  padding-bottom: 5px;
+}
+
+.col {
+  flex: 1 0 0%;
+  padding: 0%;
+  text-align: center;
+}
+
+.col1 {
+
+  margin-left: 55px;
+  text-align: left;
+}
+
+.prev {
+  font-size: 30px;
+  color: #7F8FA4
+}
+
+.next {
+  font-size: 30px;
+  color: #7F8FA4
+}
+
+.datepicker-inline {
+  width: 100%;
+  height: 100%;
+  /* padding: 5px 5px 5px 5px; */
+}
+
+.datepicker-days {
+  width: 100%;
+  height: 100%;
+}
+
+.table-condensed {
+  width: 100%;
+  height: 100%;
+}
+
+.split-cell {
+
+  background-image: -webkit-linear-gradient(308deg, #AB7DF6 50%, #26C1C9 50%);
+}
+
+.day {
+  font-size: 20px;
+}
+
+.datepicker td,
+.datepicker th {
+  height: 68px;
+  width: 70px;
+  padding: 5px 5px 5px 5px;
+}
+
+.circle:before {
+  content: ' \25CF';
+  font-size: 20px;
+  color: rgb(236, 214, 11);
+}
+
+.table-condensed {
+  border-collapse: separate;
+  border-spacing: 0.7em 0.7em;
+}
+
+.date {
+  pointer-events: none;
+}
+
+.calendar-date {
+  position: relative;
+  top: 20px;
+}
+
+.meta-events {
+  width: 100%;
+  position: relative;
+}
+
+.single-dots-container {
+  position: absolute;
+  top: 25px;
+  width: 100%;
+  left: 0%;
+}
+
+
+.single-dot {
+  height: 10px !important;
+  width: 10px !important;
+  background-color: #00558c;
+  border-radius: 50%;
+  display: inline-block !important;
+  margin-left: 10% !important;
+}
+
+.top-single-dots-container {
+  position: absolute;
+  top: 1px;
+  width: fit-content;
+  right: 0%;
+}
+
+.datepicker table tr td.active {
+  background-color: rgb(116, 150, 219) !important;
+}
+
+.event-container {
+  height: 100%;
+  width: 100%;
+}
+
+.custom-day {
+  padding: 0px 0px 0px !important;
+}
+
+.p-dot {
+  -webkit-column-span: all;
+  column-span: all;
+  margin: 5px 5px;
+}
+
+.py-3 {
+  padding-top: 1rem !important;
+  padding-bottom: 1px !important;
+}
+
+.indextitle {
+  margin-left: 1rem;
+}
+
+.thead {
+  border-bottom: solid 1px red !important;
+
+  display: table-header-group;
+  vertical-align: middle;
+
+
+}
+
+.dot {
+  height: 20px;
+  width: 20px;
+  background-color: Red;
+  border-radius: 50%;
+  display: inline-block;
+  margin-top: 5px
+}
+
+.datepicker.datepicker-inline td,
+.datepicker.datepicker-inline th,
+.datepicker.dropdown-menu td,
+.datepicker.dropdown-menu th {
+  padding: 0px 0px !important;
+}
+
+.datepicker {
+  padding: 0px !important;
+}

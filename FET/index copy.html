@@ -1,0 +1,282 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
+    integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ=="
+    crossorigin="anonymous"></script>
+
+<link
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.standalone.min.css"
+    rel="stylesheet" />
+
+<style>
+    .calendar-main {
+        width: fit-content;
+        box-shadow: 0px 0px 2px 0px;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: white;
+    }
+
+    .datepicker table tr td.new,
+    .datepicker table tr td.old {
+        color: #999;
+        background-color: #f0f0f0;
+    }
+
+    .row1 {
+
+        max-width: 100%;
+        height: 50px;
+        box-shadow: 0px 0px 2px 0px;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: whitesmoke;
+        box-shadow: black;
+    }
+
+    .col {
+        text-align: center;
+    }
+
+    .datepicker-inline {
+        width: 100%;
+        height: 100%;
+        padding: 5px 5px 5px 5px;
+    }
+
+    .datepicker-days {
+        width: 100%;
+        height: 100%;
+    }
+
+    .table-condensed {
+        width: 100%;
+        height: 100%;
+    }
+
+    .split-cell {
+        background-image: -webkit-linear-gradient(-45deg, #AB7DF6 50%, #26C1C9 50%);
+    }
+
+    .datepicker td,
+    .datepicker th {
+        height: 68px;
+        width: 70px;
+        padding: 5px 5px 5px 5px;
+    }
+
+    .circle:before {
+        content: ' \25CF';
+        font-size: 20px;
+        color: rgb(236, 214, 11);
+    }
+
+    .table-condensed {
+        border-collapse: separate;
+        border-spacing: 0.7em 0.7em;
+    }
+
+    .date {
+        pointer-events: none;
+    }
+
+    .calendar-date {
+        position: relative;
+        top: 20px;
+    }
+
+    .meta-events {
+        width: 100%;
+        position: relative;
+    }
+
+    .single-dots-container {
+        position: absolute;
+        top: 25px;
+        width: 100%;
+        left: 0%;
+    }
+
+
+    .single-dot {
+        height: 10px !important;
+        width: 10px !important;
+        background-color: #00558c;
+        border-radius: 50%;
+        display: inline-block !important;
+        margin-left: 10% !important;
+    }
+
+    .top-single-dots-container {
+        position: absolute;
+        top: 5px;
+        width: 100%;
+        right: -65%;
+    }
+
+    .datepicker table tr td.active {
+        background-color: rgb(116, 150, 219) !important;
+    }
+
+    .event-container {
+        height: 100%;
+        width: 100%;
+    }
+
+    .custom-day {
+        padding: 0px 0px 0px !important;
+    }
+
+    .p-dot {
+        -webkit-column-span: all;
+        column-span: all;
+        margin: 5px 5px;
+    }
+</style>
+
+<body>
+    <div class="container ">
+        <div class="row py-3 background">
+            <div class="calendar-main" id="calendar">
+            </div>
+        </div>
+        <div class="row row1">
+            <div class="col">
+                <div class="circle"> GM-Approval</div>
+            </div>
+            <div class="col">
+                <div class="circle"> PO-Cutoffs</div>
+            </div>
+            <div class="col">
+                <div class="circle">US-Holidays</div>
+            </div>
+        </div>
+        <div class="row row1">
+            <div class="col">
+                <div class="circle"></div>
+            </div>
+            <div class="col">
+                <div class="circle"></div>
+            </div>
+            <div class="col">
+                <div class="circle"></div>
+            </div>
+        </div>
+    </div>
+    <script src="./Calendar.js"></script>
+</body>
+
+<script>
+    var today = new Date();
+    var today_formatted = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + ('0' + today.getDate()).slice(-2);
+    var split_days = ['2021-2-03', '2021-2-13', '2021-2-15'];
+    var dots_days = [];
+
+
+    function bindCalendar() {
+        $('#calendar').datepicker({
+            format: "mm/dd/yyyy",
+            weekStart: 1,
+
+            beforeShowDay: function (date) {
+                var calender_date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + ('0' + date.getDate()).slice(-2);
+                var search_index = $.inArray(calender_date, split_days);
+                var classes = "";
+                var dotsHtml = "";
+                var topDotHtml = "";
+                if (search_index > -1) {
+                    classes = classes + 'split-cell';
+                }
+
+                var todayEvent = dots_days.filter(e => {
+                    var event = new Date(e.EventDate.split("T")[0]);
+                    var event_formatted = event.getFullYear() + '-' + (event.getMonth() + 1) + '-' + ('0' + event.getDate()).slice(-2);
+
+                    if (event_formatted === calender_date) {
+                        return true;
+                    }
+                });
+
+                if (todayEvent.length > 0) {
+                    var firstColour = todayEvent.filter(e => e.EventType.Title === "PO Cut-Offs");
+                    var secondColour = todayEvent.filter(e => e.EventType.Title === "GM Approval");
+                    if (firstColour.length > 0 && secondColour.length === 0) {
+                        classes = 'style="background-color:' + firstColour[0].EventType.kiar + '"';
+                    } else if (firstColour.length == 0 && secondColour.length > 0) {
+                        classes = 'style="background-color:' + secondColour[0].EventType.kiar + '"';
+                    } else if (firstColour.length > 0 && secondColour.length > 0) {
+                        classes = 'style="background-image: -webkit-linear-gradient(-45deg, ' + secondColour[0].EventType.kiar + ' 50%, ' + firstColour[0].EventType.kiar + ' 50%);"'
+                    }
+
+                    // var topEvent = todayEvent.filter(e => e.EventType.Title === "US Holidays");
+                    // if (topEvent.length > 0) {
+                    //     topDotHtml = '<p class="m-0 text-center p-dot"><span style="background-color: ' + topEvent[0].EventType.kiar + ';" class="single-dot"></span></p>';
+                    // }
+                    dotsHtml = todayEvent.reduce((final, curr) => {
+                        if (curr.EventType.Title === "PO Cut-Offs" || curr.EventType.Title === "GM Approval") {
+                            return final;
+                        } else {
+                            return final + '<p class="text-center p-dot"><span style="background-color: ' + curr.EventType.kiar + ';" class="single-dot"></span></p>';
+                        }
+                    }, "");
+                }
+
+                return {
+                    classes: "custom-day",
+                    content: '<div ' + classes + ' class="event-container">' +
+                        '<div class="meta-events">' +
+                        '<div class="top-single-dots-container">' +
+                        dotsHtml +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="day calendar-date">' +
+                        date.getDate() +
+                        '</div>' +
+                        '</div>'
+                }
+            }
+        });
+    }
+    // https://hitachigroup.sharepoint.com/sites/HAL_RD_Portal_Dev/_api/web/lists/getbytitle('CalenderEventsData')/Items?$select=Title,EventDate,EventType/kiar,EventType/Title&$expand=EventType/Id
+
+    function getJsonDataAsync(url) {
+        var deferred = $.Deferred();
+        var requestHeaders = { Accept: "application/json; odata=verbose" };
+        $.ajax({
+            url: url, // The file path.
+            method: "GET",
+            headers: requestHeaders,
+            success: function (data) {
+                deferred.resolve(data);
+            },
+            error: function (error) {
+                deferred.reject(error);
+            }
+        });
+        return deferred;
+    }
+
+
+    getJsonDataAsync("https://hitachigroup.sharepoint.com/sites/HAL_RD_Portal_Dev/_api/web/lists/getbytitle('CalenderEventsData')/Items?$select=Title,EventDate,EventType/kiar,EventType/Title&$expand=EventType/Id")
+        .then(data => {
+            console.log(data);
+            dots_days = data.d.results;
+            bindCalendar();
+        }).fail(e => {
+            console.log(e);
+        });
+
+    $(document).ready(function () {
+
+        $('.prev').text('<');
+        $('.next').text(">");
+    });
+
+
+</script>
