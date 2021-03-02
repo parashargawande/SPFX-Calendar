@@ -58,7 +58,6 @@ function bindCalendar() {
             var todayEvent = dots_days.filter(e => {
                 var event = new Date(e.EventDate.split("T")[0]);
                 var event_formatted = event.getFullYear() + '-' + (event.getMonth() + 1) + '-' + ('0' + event.getDate()).slice(-2);
-
                 if (event_formatted === calender_date) {
                     return true;
                 }
