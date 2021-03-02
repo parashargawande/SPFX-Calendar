@@ -39,7 +39,7 @@ export default class EventsCalendarWebPart extends BaseClientSideWebPart<IEvents
         <div class="calendar-main" id="calendar">
         </div>
     </div>
-    <div class="row row1">
+    <div id='row1' class="row row1">
         <div class="col col1">
             <div class="dot"></div><span class="indextitle">GM-Approval</span>
         </div>
@@ -51,7 +51,7 @@ export default class EventsCalendarWebPart extends BaseClientSideWebPart<IEvents
             <span class="dot"></span><span class="indextitle">US-Holidays</span>
         </div>
     </div>
-    <div class="row row1">
+    <div id='row2' class="row row1">
         <div class="col col1 mr-2">
             <span class="dot"></span><span class="indextitle">Test-label</span>
         </div>

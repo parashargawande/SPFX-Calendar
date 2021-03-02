@@ -7,11 +7,45 @@ var today_formatted = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +
 var split_days = ['2021-2-03', '2021-2-13', '2021-2-15'];
 var dots_days = [];
 
+function groupBy(list, keyGetter) {
+    const map = new Map();
+    list.forEach((item) => {
+        const key = keyGetter(item);
+        const collection = map.get(key);
+        if (!collection) {
+            map.set(key, [item]);
+        } else {
+            collection.push(item);
+        }
+    });
+    return map;
+}
+
 function bindCalendar() {
     console.log(window.CalendarProperties);
     moment.updateLocale('en', {
         weekdaysMin: ["S", "M", "T", "W", "T", "F", "S"]
     });
+
+    var groupedData = groupBy(dots_days, dots_days => dots_days.EventType.Title);
+    console.log(groupedData);
+
+    var row1Identifier = "";
+    var row2Identifier = "";
+    var count=3;
+    Array.from(groupedData.keys()).forEach(key=>{
+        console.log(groupedData.get(key)[0].EventType.Title,groupedData.get(key)[0].EventType.kiar)
+        var dynamicHtml = `<div class="col col1">
+            <div style="background-color: `+groupedData.get(key)[0].EventType.kiar+`;" class="dot"></div><span class="indextitle">`+groupedData.get(key)[0].EventType.Title+`</span>
+            </div>`;
+        if(count > 0){
+            row1Identifier += dynamicHtml;
+        }else{
+            row2Identifier += dynamicHtml;
+        }
+    });
+    $('#row1').html(row1Identifier);
+    $('#row2').html(row2Identifier);
 
     $('#calendar').datepicker({
         format: "mm/dd/yyyy",
@@ -84,8 +118,6 @@ function getJsonDataAsync(url) {
 }
 
 $(function () {
-
-
     if (window.CalendarProperties.listName) {
         getJsonDataAsync("https://hitachigroup.sharepoint.com/sites/HAL_RD_Portal_Dev/_api/web/lists/getbytitle('" + window.CalendarProperties.listName + "')/Items?$select=Title,EventDate,EventType/kiar,EventType/Title&$expand=EventType/Id")
             .then(data => {
