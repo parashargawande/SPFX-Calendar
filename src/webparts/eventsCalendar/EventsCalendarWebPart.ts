@@ -1,7 +1,9 @@
 import { Version } from '@microsoft/sp-core-library';
 import {
   IPropertyPaneConfiguration,
-  PropertyPaneTextField
+  PropertyPaneTextField,
+  PropertyPaneDropdown,
+  IPropertyPaneDropdownOption
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 
@@ -12,6 +14,8 @@ require('./assets/bootstrap-datepicker.standalone.min.css');
 require('./Calendar.css');
 require('jquery')
 require('./assets/bootstrap-datepicker.min.js')
+import * as $ from 'jquery';
+
 
 import * as strings from 'EventsCalendarWebPartStrings';
 
@@ -22,6 +26,10 @@ export interface IEventsCalendarWebPartProps {
 declare const window: any;
 
 export default class EventsCalendarWebPart extends BaseClientSideWebPart<IEventsCalendarWebPartProps> {
+
+  private lists: IPropertyPaneDropdownOption[];
+  private listsDropdownDisabled: boolean = true;
+
 
   public constructor() {
     super();
@@ -71,6 +79,45 @@ export default class EventsCalendarWebPart extends BaseClientSideWebPart<IEvents
     return Version.parse('1.0');
   }
 
+  private loadLists(): Promise<IPropertyPaneDropdownOption[]> {
+    return new Promise<IPropertyPaneDropdownOption[]>((resolve: (options: IPropertyPaneDropdownOption[]) => void, reject: (error: any) => void) => {
+      var url = "https://hitachigroup.sharepoint.com/sites/HAL_RD_Portal_Dev/_api/web/lists?$select=Title";
+      var requestHeaders = { Accept: "application/json; odata=verbose" };
+      $.ajax({
+        url: url, // The file path.
+        method: "GET",
+        headers: requestHeaders,
+        success: function (data) {
+          var listArray = [];
+          if (data.d.results.length > 0) {
+            data.d.results.forEach(list => {
+              listArray.push({
+                key: list.Title,
+                text: list.Title
+              });
+            });
+          }
+          resolve(listArray);
+        },
+        error: function (error) {
+          reject(error);
+        }
+      });
+    });
+  }
+
+  protected onPropertyPaneConfigurationStart(): void {
+    this.context.statusRenderer.displayLoadingIndicator(this.domElement, 'lists');
+    this.loadLists()
+      .then((listOptions: any): void => {
+        this.lists = listOptions;
+        this.listsDropdownDisabled = false;
+        this.context.propertyPane.refresh();
+        this.context.statusRenderer.clearLoadingIndicator(this.domElement);
+        this.render();
+      });
+  }
+
   public getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
     return {
       pages: [
@@ -79,8 +126,10 @@ export default class EventsCalendarWebPart extends BaseClientSideWebPart<IEvents
             {
               groupName: "Configuration",
               groupFields: [
-                PropertyPaneTextField('listName', {
-                  label: "List Name"
+                PropertyPaneDropdown('listName', {
+                  label: "List Name",
+                  options: this.lists,
+                  disabled: this.listsDropdownDisabled
                 })
               ]
             }
