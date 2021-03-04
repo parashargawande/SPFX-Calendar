@@ -2,6 +2,7 @@ var today = new Date();
 var today_formatted = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + ('0' + today.getDate()).slice(-2);
 var split_days = [];
 var dots_days = [];
+var colors = [];
 
 function bindCalendar() {
   $('#calendar').datepicker({
@@ -23,8 +24,8 @@ function bindCalendar() {
       });
 
       if (todayEvent.length > 0) {
-        var firstColour = todayEvent.filter(e => e.EventType.Title === "PO Cut-Offs");
-        var secondColour = todayEvent.filter(e => e.EventType.Title === "GM Approval");
+        var firstColour = todayEvent.filter(e => e.EventType.Title === colors[0].Title);
+        var secondColour = todayEvent.filter(e => e.EventType.Title === colors[1].Title);
         if (firstColour.length > 0 && secondColour.length === 0) {
           classes = 'style="background-color:' + firstColour[0].EventType.kiar + '"';
         } else if (firstColour.length == 0 && secondColour.length > 0) {
@@ -34,7 +35,7 @@ function bindCalendar() {
         }
 
         dotsHtml = todayEvent.reduce((final, curr) => {
-          if (curr.EventType.Title === "PO Cut-Offs" || curr.EventType.Title === "GM Approval") {
+          if (curr.EventType.Title === colors[0].Title || curr.EventType.Title === colors[1].Title) {
             return final;
           } else {
             return final + '<p class="text-center p-dot"><span style="background-color: ' + curr.EventType.kiar + ';" class="single-dot"></span></p>';
@@ -80,7 +81,11 @@ function getJsonDataAsync(url) {
 }
 
 function init() {
-  getJsonDataAsync("https://hitachigroup.sharepoint.com/sites/HAL_RD_Portal_Dev/_api/web/lists/getbytitle('CalenderEventsData')/Items?$select=Title,EventDate,EventType/kiar,EventType/Title&$expand=EventType/Id")
+  getJsonDataAsync("https://hitachigroup.sharepoint.com/sites/HAL_RD_Portal_Dev/_api/web/lists/getbytitle('CalenderEventsColorCode')/Items?$select=Title")
+  .then(clrs=>{
+    console.log(clrs);
+    colors=clrs.d.results;
+    getJsonDataAsync("https://hitachigroup.sharepoint.com/sites/HAL_RD_Portal_Dev/_api/web/lists/getbytitle('CalenderEventsData')/Items?$select=Title,EventDate,EventType/kiar,EventType/Title&$expand=EventType/Id")
     .then(data => {
       console.log(data);
       dots_days = data.d.results;
@@ -88,5 +93,6 @@ function init() {
     }).fail(e => {
       console.log(e);
     });
+  });
 }
 init();

@@ -21,7 +21,8 @@ import * as strings from 'EventsCalendarWebPartStrings';
 
 export interface IEventsCalendarWebPartProps {
   description: string;
-  listName: string;
+  eventsList: string;
+  eventTypesList: string;
 }
 declare const window: any;
 
@@ -126,8 +127,13 @@ export default class EventsCalendarWebPart extends BaseClientSideWebPart<IEvents
             {
               groupName: "Configuration",
               groupFields: [
-                PropertyPaneDropdown('listName', {
-                  label: "List Name",
+                PropertyPaneDropdown('eventsList', {
+                  label: "Select event list",
+                  options: this.lists,
+                  disabled: this.listsDropdownDisabled
+                }),
+                PropertyPaneDropdown('eventTypesList', {
+                  label: "Select event type list",
                   options: this.lists,
                   disabled: this.listsDropdownDisabled
                 })
