@@ -73,6 +73,7 @@ export default class EventsCalendarWebPart extends BaseClientSideWebPart<IEvents
     </div>
     </div>`;
     window.CalendarProperties = this.properties;
+    window.PageProperties = this.context.pageContext;
     require('./assets/Calendar.js')
   }
 
@@ -82,7 +83,7 @@ export default class EventsCalendarWebPart extends BaseClientSideWebPart<IEvents
 
   private loadLists(): Promise<IPropertyPaneDropdownOption[]> {
     return new Promise<IPropertyPaneDropdownOption[]>((resolve: (options: IPropertyPaneDropdownOption[]) => void, reject: (error: any) => void) => {
-      var url = "https://hitachigroup.sharepoint.com/sites/HAL_RD_Portal_Dev/_api/web/lists?$select=Title";
+      var url = this.context.pageContext.site.absoluteUrl+"/_api/web/lists?$select=Title";
       var requestHeaders = { Accept: "application/json; odata=verbose" };
       $.ajax({
         url: url, // The file path.

@@ -83,10 +83,6 @@
   background-image: -webkit-linear-gradient(308deg, #AB7DF6 50%, #26C1C9 50%);
 }
 
-.day {
-  font-size: 20px;
-}
-
 .datepicker td,
 .datepicker th {
   height: 68px;
@@ -112,6 +108,7 @@
 .calendar-date {
   position: relative;
   top: 20px;
+  font-size: 20px;
 }
 
 .meta-events {
